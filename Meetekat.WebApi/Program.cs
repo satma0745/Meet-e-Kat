@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Annotations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,15 @@ builder.Services.AddSwaggerGen(options =>
 
     // Swashbuckle.AspNetCore.Annotations integration
     options.OperationFilter<AnnotationsOperationFilter>();
+    
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Put Your access token here:",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+    options.OperationFilter<OpenApiSecurityRequirementFilter>();
 });
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
