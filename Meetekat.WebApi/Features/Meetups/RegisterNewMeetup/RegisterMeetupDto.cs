@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
+using Meetekat.WebApi.Validation;
 
 [UsedImplicitly(ImplicitUseKindFlags.Assign, ImplicitUseTargetFlags.WithMembers)]
 public class RegisterMeetupDto
@@ -20,12 +21,10 @@ public class RegisterMeetupDto
     [MaxLength(7)]
     public ICollection<string> Tags { get; set; }
     
-    // TODO: This field is still not really required.
-    [Required]
+    [NotEmpty]
     public DateTime StartTime { get; set; }
     
-    // TODO: This field is still not really required.
-    [Required]
+    [NotEmpty]
     public DateTime EndTime { get; set; }
     
     [Required]
