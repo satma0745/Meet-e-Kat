@@ -2,6 +2,7 @@
 
 using System.Linq;
 using BCrypt.Net;
+using Meetekat.WebApi.Auth;
 using Meetekat.WebApi.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,13 @@ using Swashbuckle.AspNetCore.Annotations;
 public class AuthenticateUserFeature : FeatureBase
 {
     private readonly ApplicationContext context;
+    private readonly JwtTokenService jwtTokenService;
 
-    public AuthenticateUserFeature(ApplicationContext context) =>
+    public AuthenticateUserFeature(ApplicationContext context, JwtTokenService jwtTokenService)
+    {
         this.context = context;
+        this.jwtTokenService = jwtTokenService;
+    }
 
     [Tags(ApiSections.Auth)]
     [HttpPost("/api/session")]
@@ -28,7 +33,7 @@ public class AuthenticateUserFeature : FeatureBase
             return NotFound();
         }
 
-        var accessToken = user.Id.GetHashCode();
+        var accessToken = jwtTokenService.IssueAccessToken(user.Id);
         return Ok(accessToken);
     }
 }

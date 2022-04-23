@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Meetekat.WebApi.Auth;
 using Meetekat.WebApi.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 {
     options.UseInMemoryDatabase("In-Memory DB");
 });
+builder.Services.AddSingleton<JwtTokenService>();
 
 var app = builder.Build();
 app.UseSwagger();
