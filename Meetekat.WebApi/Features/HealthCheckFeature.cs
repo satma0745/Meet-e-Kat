@@ -2,14 +2,14 @@ namespace Meetekat.WebApi.Features;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 [ApiController]
 [Tags("HealthCheck")]
 public class HealthCheckFeature : ControllerBase
 {
-    /// <summary>Check if application is up and running.</summary>
-    /// <response code="200">The application is working normally.</response>
     [HttpGet("/api/health-checks")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [SwaggerOperation("Check if application is up and running.")]
+    [SwaggerResponse(StatusCodes.Status200OK, "The application is working normally.")]
     public IActionResult Check() => Ok();
 }
