@@ -1,4 +1,4 @@
-namespace Meetekat.WebApi.Features;
+namespace Meetekat.WebApi.Features.HealthChecks;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
