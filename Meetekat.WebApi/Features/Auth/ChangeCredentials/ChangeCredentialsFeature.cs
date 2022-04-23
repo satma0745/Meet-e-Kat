@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using BCrypt.Net;
 using Meetekat.WebApi.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,8 +40,7 @@ public class ChangeCredentialsFeature : FeatureBase
         }
 
         user.Username = credentialsDto.Username;
-        // TODO: Implement password hashing.
-        user.Password = credentialsDto.Password;
+        user.Password = BCrypt.HashPassword(credentialsDto.Password);
         context.SaveChanges();
 
         return Ok();

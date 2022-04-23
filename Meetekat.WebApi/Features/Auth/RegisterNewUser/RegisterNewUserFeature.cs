@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using BCrypt.Net;
 using Meetekat.WebApi.Entities;
 using Meetekat.WebApi.Persistence;
 using Microsoft.AspNetCore.Http;
@@ -33,8 +34,7 @@ public class RegisterNewUserFeature : FeatureBase
         {
             Id = Guid.NewGuid(),
             Username = registrationDto.Username,
-            // TODO: Implement password hashing.
-            Password = registrationDto.Password
+            Password = BCrypt.HashPassword(registrationDto.Password)
         };
         context.Users.Add(user);
         context.SaveChanges();
