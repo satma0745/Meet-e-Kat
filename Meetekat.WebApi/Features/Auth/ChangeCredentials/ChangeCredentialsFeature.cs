@@ -36,6 +36,7 @@ public class ChangeCredentialsFeature : FeatureBase
             .Any(anotherUser => anotherUser.Username == credentialsDto.Username);
         if (usernameAlreadyTaken)
         {
+            // TODO: Return the 400 Bad Request validation error, not 409 Conflict.
             return Conflict();
         }
 
