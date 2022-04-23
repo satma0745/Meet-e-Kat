@@ -2,22 +2,19 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
 using Meetekat.WebApi.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-[ApiController]
-[Tags("Meetups")]
-[Produces(MediaTypeNames.Application.Json)]
-public class GetMeetupsFeature : ControllerBase
+public class GetMeetupsFeature : FeatureBase
 {
     private readonly ApplicationContext context;
 
     public GetMeetupsFeature(ApplicationContext context) =>
         this.context = context;
 
+    [Tags("Meetups")]
     [HttpGet("/api/meetups")]
     [SwaggerOperation("Get all meetups.")]
     [SwaggerResponse(StatusCodes.Status200OK, "Meetups retrieved successfully.", typeof(IEnumerable<MeetupDto>))]

@@ -2,23 +2,19 @@
 
 using System;
 using System.Linq;
-using System.Net.Mime;
 using Meetekat.WebApi.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-[ApiController]
-[Tags("Meetups")]
-[Consumes(MediaTypeNames.Application.Json)]
-[Produces(MediaTypeNames.Application.Json)]
-public class UpdateMeetupFeature : ControllerBase
+public class UpdateMeetupFeature : FeatureBase
 {
     private readonly ApplicationContext context;
 
     public UpdateMeetupFeature(ApplicationContext context) =>
         this.context = context;
 
+    [Tags("Meetups")]
     [HttpPut("/api/meetups/{meetupId:guid}")]
     [SwaggerOperation("Update a Meetup with the matching ID.")]
     [SwaggerResponse(StatusCodes.Status200OK, "A Meetup with the specified ID was updated successfully.", typeof(UpdatedMeetupDto))]
