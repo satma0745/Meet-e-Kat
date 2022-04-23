@@ -3,8 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using JetBrains.Annotations;
 
-public class MeetupOutputDto
+[UsedImplicitly(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.WithMembers)]
+public class MeetupDto
 {
     [Required]
     public Guid Id { get; init; }

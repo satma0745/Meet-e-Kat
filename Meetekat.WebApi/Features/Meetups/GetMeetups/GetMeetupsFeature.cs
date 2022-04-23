@@ -20,10 +20,10 @@ public class GetMeetupsFeature : ControllerBase
 
     [HttpGet("/api/meetups")]
     [SwaggerOperation("Get all meetups.")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Meetups retrieved successfully.", typeof(IEnumerable<MeetupOutputDto>))]
+    [SwaggerResponse(StatusCodes.Status200OK, "Meetups retrieved successfully.", typeof(IEnumerable<MeetupDto>))]
     public IActionResult GetMeetups()
     {
-        var meetupOutputDtos = context.Meetups.Select(meetup => new MeetupOutputDto
+        var meetupOutputDtos = context.Meetups.Select(meetup => new MeetupDto
         {
             Id = meetup.Id,
             Title = meetup.Title,
