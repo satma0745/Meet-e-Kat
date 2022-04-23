@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Reflection;
 using Meetekat.WebApi.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(options =>
 {
+    // XML Documentation Comments integration
+    var webApiProjectName = Assembly.GetExecutingAssembly().GetName().Name;
+    var pathToXmlCommentsFile = Path.Combine(AppContext.BaseDirectory, $"{webApiProjectName}.xml");
+    options.IncludeXmlComments(pathToXmlCommentsFile);
+
+    // Swashbuckle.AspNetCore.Annotations integration
     options.OperationFilter<AnnotationsOperationFilter>();
 });
 builder.Services.AddDbContext<ApplicationContext>(options =>
