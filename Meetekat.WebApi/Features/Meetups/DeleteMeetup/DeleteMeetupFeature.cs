@@ -14,7 +14,7 @@ public class DeleteMeetupFeature : FeatureBase
     public DeleteMeetupFeature(ApplicationContext context) =>
         this.context = context;
 
-    [Tags("Meetups")]
+    [Tags(ApiSections.Meetups)]
     [HttpDelete("/api/meetups/{meetupId:guid}")]
     [SwaggerOperation("Delete a Meetup with matching ID.")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "A Meetup with the specified ID was deleted successfully.")]

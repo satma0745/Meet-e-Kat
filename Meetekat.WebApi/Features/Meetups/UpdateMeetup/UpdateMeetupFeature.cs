@@ -14,7 +14,7 @@ public class UpdateMeetupFeature : FeatureBase
     public UpdateMeetupFeature(ApplicationContext context) =>
         this.context = context;
 
-    [Tags("Meetups")]
+    [Tags(ApiSections.Meetups)]
     [HttpPut("/api/meetups/{meetupId:guid}")]
     [SwaggerOperation("Update a Meetup with the matching ID.")]
     [SwaggerResponse(StatusCodes.Status200OK, "A Meetup with the specified ID was updated successfully.", typeof(UpdatedMeetupDto))]

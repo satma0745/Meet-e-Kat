@@ -14,7 +14,7 @@ public class RegisterNewMeetupFeature : FeatureBase
     public RegisterNewMeetupFeature(ApplicationContext context) =>
         this.context = context;
 
-    [Tags("Meetups")]
+    [Tags(ApiSections.Meetups)]
     [HttpPost("/api/meetups")]
     [SwaggerOperation("Register a new meetup.")]
     [SwaggerResponse(StatusCodes.Status201Created, "A new meetup is registered successfully.", typeof(RegisteredMeetupDto))]
