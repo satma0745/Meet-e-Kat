@@ -17,7 +17,7 @@ public class GetMeetupsFeature : FeatureBase
         this.context = context;
 
     [Tags(ApiSections.Feed)]
-    [HttpGet("/api/meetups")]
+    [HttpGet("/api/feed/get-meetups")]
     [SwaggerOperation("Get all meetups.")]
     [SwaggerResponse(StatusCodes.Status200OK, "Meetups retrieved successfully.", typeof(IEnumerable<MeetupDto>))]
     public IActionResult GetMeetups()

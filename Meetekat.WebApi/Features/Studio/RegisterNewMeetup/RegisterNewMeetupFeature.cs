@@ -19,7 +19,7 @@ public class RegisterNewMeetupFeature : FeatureBase
         this.context = context;
 
     [Tags(ApiSections.Studio)]
-    [HttpPost("/api/meetups")]
+    [HttpPost("/api/studio/register-new-meetup")]
     [Authorize(Roles = nameof(Organizer))]
     [SwaggerOperation("Register a new meetup.")]
     [SwaggerResponse(StatusCodes.Status201Created, "A new meetup is registered successfully.", typeof(RegisteredMeetupDto))]

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 
 [UsedImplicitly(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.WithMembers)]
-public class MeetupDto
+public class OrganizedMeetupDto
 {
     /// <summary>Meetup ID.</summary>
     /// <example>07450745-0745-0745-0745-074507450745</example>

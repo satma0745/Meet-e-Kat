@@ -16,7 +16,7 @@ public class GetCurrentUserInfoFeature : FeatureBase
         this.context = context;
 
     [Tags(ApiSections.Auth)]
-    [HttpGet("/api/users/self")]
+    [HttpGet("/api/auth/get-current-user")]
     [Authorize]
     [SwaggerOperation("Get current User info.")]
     [SwaggerResponse(StatusCodes.Status200OK, "Current User info retrieved successfully.", typeof(CurrentUserDto))]

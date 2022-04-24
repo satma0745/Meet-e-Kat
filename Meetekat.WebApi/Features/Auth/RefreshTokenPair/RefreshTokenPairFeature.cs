@@ -22,7 +22,7 @@ public class RefreshTokenPairFeature : FeatureBase
     }
 
     [Tags(ApiSections.Auth)]
-    [HttpPatch("/api/token-pairs")]
+    [HttpPost("/api/auth/refresh-token-pair")]
     [SwaggerOperation("Refresh Token Pair.")]
     [SwaggerResponse(StatusCodes.Status200OK, "Token Pair was refreshed successfully.", typeof(TokenPairDto))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid, expired, used or fake Refresh Token was provided.")]

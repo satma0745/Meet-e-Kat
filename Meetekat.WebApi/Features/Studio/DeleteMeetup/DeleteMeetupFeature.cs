@@ -1,6 +1,7 @@
 ﻿namespace Meetekat.WebApi.Features.Studio.DeleteMeetup;
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
@@ -18,13 +19,13 @@ public class DeleteMeetupFeature : FeatureBase
         this.context = context;
 
     [Tags(ApiSections.Studio)]
-    [HttpDelete("/api/meetups/{meetupId:guid}")]
+    [HttpPost("/api/studio/delete-meetup")]
     [Authorize(Roles = nameof(Organizer))]
     [SwaggerOperation("Delete a Meetup with matching ID.")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "A Meetup with the specified ID was deleted successfully.")]
     [SwaggerResponse(StatusCodes.Status403Forbidden, "Only a Meetup's direct Organizer can delete the Meetup.")]
     [SwaggerResponse(StatusCodes.Status404NotFound, "A Meetup with the specified ID doesn't exist.")]
-    public IActionResult DeleteMeetup([FromRoute] Guid meetupId)
+    public IActionResult DeleteMeetup([FromQuery] [Required] Guid meetupId)
     {
         var meetup = context.Meetups.SingleOrDefault(meetup => meetup.Id == meetupId);
         if (meetup is null)

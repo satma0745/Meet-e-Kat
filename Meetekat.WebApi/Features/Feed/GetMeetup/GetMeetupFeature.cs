@@ -1,6 +1,7 @@
 ﻿namespace Meetekat.WebApi.Features.Feed.GetMeetup;
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
@@ -17,11 +18,11 @@ public class GetMeetupFeature : FeatureBase
         this.context = context;
 
     [Tags(ApiSections.Feed)]
-    [HttpGet("/api/meetup/{meetupId:guid}")]
+    [HttpGet("/api/feed/get-meetup")]
     [SwaggerOperation("Get a specific Meetups with matching ID.")]
     [SwaggerResponse(StatusCodes.Status200OK, "Meetup retrieved successfully.", typeof(MeetupDto))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Meetup with the specified ID doesn't exist")]
-    public IActionResult GetMeetup([FromRoute] Guid meetupId)
+    public IActionResult GetMeetup([FromQuery] [Required] Guid meetupId)
     {
         var meetup = context.Meetups
             .Include(meetup => meetup.SignedUpGuests)

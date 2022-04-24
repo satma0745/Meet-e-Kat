@@ -18,7 +18,7 @@ public class ChangeCredentialsFeature : FeatureBase
         this.context = context;
 
     [Tags(ApiSections.Auth)]
-    [HttpPut("/api/users/self/credentials")]
+    [HttpPost("/api/auth/change-credentials")]
     [Authorize]
     [SwaggerOperation("Change signing credentials for a User with the specified ID.")]
     [SwaggerResponse(StatusCodes.Status200OK, "Signing credentials were updated successfully.")]

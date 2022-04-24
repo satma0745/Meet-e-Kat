@@ -1,6 +1,7 @@
 ﻿namespace Meetekat.WebApi.Features.Feed.SignUpForMeetup;
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
@@ -19,13 +20,13 @@ public class SignUpForMeetupFeature : FeatureBase
         this.context = context;
 
     [Tags(ApiSections.Feed)]
-    [HttpPost("/api/meetups/{meetupId:guid}/signups")]
+    [HttpPost("/api/feed/signup-for-meetup")]
     [Authorize(Roles = nameof(Guest))]
     [SwaggerOperation("Sign up for a specific Meetup with matching ID.")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "Successfully signed up for a Meetup.")]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Meetup with the specified ID doesn't exist.")]
     [SwaggerResponse(StatusCodes.Status409Conflict, "You've already signed up for this specific meetup.")]
-    public IActionResult SignUpForMeetup([FromRoute] Guid meetupId)
+    public IActionResult SignUpForMeetup([FromQuery] [Required] Guid meetupId)
     {
         var meetup = context.Meetups
             .Include(meetup => meetup.SignedUpGuests)
@@ -46,7 +47,7 @@ public class SignUpForMeetupFeature : FeatureBase
         {
             return Conflict();
         }
-        
+
         meetup.SignedUpGuests.Add(currentUser);
         context.SaveChanges();
 

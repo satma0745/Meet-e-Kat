@@ -19,11 +19,11 @@ public class GetOrganizedMeetupsFeature : FeatureBase
         this.context = context;
 
     [Tags(ApiSections.Studio)]
-    [HttpGet("/api/meetups/organized")]
+    [HttpGet("/api/studio/get-organized-meetups")]
     [Authorize(Roles = nameof(Organizer))]
     [SwaggerOperation("Get all Meetups organized by the current User.")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Meetups retrieved successfully.", typeof(IEnumerable<MeetupDto>))]
-    public IActionResult GetMeetups()
+    [SwaggerResponse(StatusCodes.Status200OK, "Meetups retrieved successfully.", typeof(IEnumerable<OrganizedMeetupDto>))]
+    public IActionResult GetOrganizedMeetups()
     {
         var meetupOutputDtos = context.Meetups
             .Include(meetup => meetup.SignedUpGuests)

@@ -1,6 +1,7 @@
 ﻿namespace Meetekat.WebApi.Features.Studio.UpdateMeetup;
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
@@ -18,13 +19,13 @@ public class UpdateMeetupFeature : FeatureBase
         this.context = context;
 
     [Tags(ApiSections.Studio)]
-    [HttpPut("/api/meetups/{meetupId:guid}")]
+    [HttpPost("/api/studio/update-meetup")]
     [Authorize(Roles = nameof(Organizer))]
     [SwaggerOperation("Update a Meetup with the matching ID.")]
     [SwaggerResponse(StatusCodes.Status200OK, "A Meetup with the specified ID was updated successfully.", typeof(UpdatedMeetupDto))]
     [SwaggerResponse(StatusCodes.Status403Forbidden, "Only a Meetup's direct Organizer can update the Meetup.")]
     [SwaggerResponse(StatusCodes.Status404NotFound, "A Meetup with the specified ID doesn't exist.")]
-    public IActionResult UpdateMeetup([FromRoute] Guid meetupId, [FromBody] UpdateMeetupDto updateDto)
+    public IActionResult UpdateMeetup([FromQuery] [Required] Guid meetupId, [FromBody] UpdateMeetupDto updateDto)
     {
         var meetup = context.Meetups.SingleOrDefault(meetup => meetup.Id == meetupId);
         if (meetup is null)
