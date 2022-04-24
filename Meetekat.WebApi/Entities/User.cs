@@ -1,6 +1,7 @@
 ﻿namespace Meetekat.WebApi.Entities;
 
 using System;
+using System.Collections.Generic;
 
 public class User
 {
@@ -9,4 +10,6 @@ public class User
     public string Username { get; set; }
     
     public string Password { get; set; }
+    
+    public ICollection<RefreshToken> RefreshTokens { get; set; }
 }

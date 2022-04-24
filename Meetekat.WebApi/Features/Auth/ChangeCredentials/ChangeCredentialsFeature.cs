@@ -6,6 +6,7 @@ using BCrypt.Net;
 using Meetekat.WebApi.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
 public class ChangeCredentialsFeature : FeatureBase
@@ -23,7 +24,9 @@ public class ChangeCredentialsFeature : FeatureBase
     [SwaggerResponse(StatusCodes.Status409Conflict, "Specified username is already taken by some other user.")]
     public IActionResult ChangeCredentials([FromRoute] Guid userId, [FromBody] ChangeCredentialsDto credentialsDto)
     {
-        var user = context.Users.SingleOrDefault(user => user.Id == userId);
+        var user = context.Users
+            .Include(user => user.RefreshTokens)
+            .SingleOrDefault(user => user.Id == userId);
         if (user is null)
         {
             return NotFound();
@@ -42,6 +45,10 @@ public class ChangeCredentialsFeature : FeatureBase
 
         user.Username = credentialsDto.Username;
         user.Password = BCrypt.HashPassword(credentialsDto.Password);
+        
+        // Revoke refresh tokens.
+        user.RefreshTokens.Clear();
+        
         context.SaveChanges();
 
         return Ok();

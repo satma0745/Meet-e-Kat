@@ -1,8 +1,10 @@
 ﻿namespace Meetekat.WebApi.Features.Auth.AuthenticateUser;
 
+using System;
 using System.Linq;
 using BCrypt.Net;
 using Meetekat.WebApi.Auth;
+using Meetekat.WebApi.Entities;
 using Meetekat.WebApi.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +22,9 @@ public class AuthenticateUserFeature : FeatureBase
     }
 
     [Tags(ApiSections.Auth)]
-    [HttpPost("/api/session")]
+    [HttpPost("/api/token-pairs")]
     [SwaggerOperation("Authenticate a User with provided credentials.")]
-    [SwaggerResponse(StatusCodes.Status200OK, "User authenticated successfully.", typeof(string))]
+    [SwaggerResponse(StatusCodes.Status200OK, "User authenticated successfully.", typeof(TokenPairDto))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "User with the provided credentials doesn't exist.")]
     public IActionResult AuthenticateUser([FromBody] SigningCredentialsDto credentialsDto)
     {
@@ -33,7 +35,20 @@ public class AuthenticateUserFeature : FeatureBase
             return NotFound();
         }
 
-        var accessToken = jwtTokenService.IssueAccessToken(user.Id);
-        return Ok(accessToken);
+        var refreshToken = new RefreshToken
+        {
+            TokenId = Guid.NewGuid(),
+            UserId = user.Id
+        };
+        context.RefreshTokens.Add(refreshToken);
+        context.SaveChanges();
+        
+        var tokenPair = jwtTokenService.IssueTokenPair(user.Id, refreshToken.TokenId);
+        var tokenPairDto = new TokenPairDto
+        {
+            AccessToken = tokenPair.AccessToken,
+            RefreshToken = tokenPair.RefreshToken
+        };
+        return Ok(tokenPairDto);
     }
 }

@@ -16,12 +16,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(options =>
 {
-    // XML Documentation Comments integration
+    // Resolve duplicating DTO names.
+    options.CustomSchemaIds(dtoType => dtoType.FullName);
+    
+    // XML Documentation Comments integration.
     var webApiProjectName = Assembly.GetExecutingAssembly().GetName().Name;
     var pathToXmlCommentsFile = Path.Combine(AppContext.BaseDirectory, $"{webApiProjectName}.xml");
     options.IncludeXmlComments(pathToXmlCommentsFile);
 
-    // Swashbuckle.AspNetCore.Annotations integration
+    // Swashbuckle.AspNetCore.Annotations integration.
     options.OperationFilter<AnnotationsOperationFilter>();
     
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
