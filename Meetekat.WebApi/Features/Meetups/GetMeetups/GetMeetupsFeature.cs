@@ -6,6 +6,7 @@ using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
 public class GetMeetupsFeature : FeatureBase
@@ -21,16 +22,19 @@ public class GetMeetupsFeature : FeatureBase
     [SwaggerResponse(StatusCodes.Status200OK, "Meetups retrieved successfully.", typeof(IEnumerable<MeetupDto>))]
     public IActionResult GetMeetups()
     {
-        var meetupOutputDtos = context.Meetups.Select(meetup => new MeetupDto
-        {
-            Id = meetup.Id,
-            Title = meetup.Title,
-            Description = meetup.Description,
-            Tags = meetup.Tags,
-            StartTime = meetup.StartTime,
-            EndTime = meetup.EndTime,
-            Organizer = meetup.Organizer
-        });
+        var meetupOutputDtos = context.Meetups
+            .Include(meetup => meetup.SignedUpGuests)
+            .Select(meetup => new MeetupDto
+            {
+                Id = meetup.Id,
+                Title = meetup.Title,
+                Description = meetup.Description,
+                Tags = meetup.Tags,
+                StartTime = meetup.StartTime,
+                EndTime = meetup.EndTime,
+                Organizer = meetup.Organizer,
+                SignedUpGuestsCount = meetup.SignedUpGuests.Count
+            });
 
         return Ok(meetupOutputDtos);
     }

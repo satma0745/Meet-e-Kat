@@ -42,4 +42,9 @@ public class MeetupDto
     /// <example>Roy J. Jefferson</example>
     [Required]
     public string Organizer { get; init; }
+    
+    /// <summary>The number of Guests who decided to sign up for a meetup.</summary>
+    /// <example>17</example>
+    [Required]
+    public int SignedUpGuestsCount { get; init; }
 }
