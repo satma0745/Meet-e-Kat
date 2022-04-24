@@ -16,7 +16,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
-    options.UseInMemoryDatabase("In-Memory DB");
+    var persistenceConfiguration = PersistenceConfiguration.FromApplicationConfiguration(builder.Configuration);
+    options.UseNpgsql(persistenceConfiguration.ConnectionString);
 });
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
