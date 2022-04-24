@@ -1,8 +1,6 @@
 ﻿namespace Meetekat.WebApi.Features.Auth.ChangeCredentials;
 
-using System;
 using System.Linq;
-using System.Security.Claims;
 using BCrypt.Net;
 using Meetekat.WebApi.Persistence;
 using Microsoft.AspNetCore.Authorization;
@@ -27,12 +25,9 @@ public class ChangeCredentialsFeature : FeatureBase
     [SwaggerResponse(StatusCodes.Status409Conflict, "Specified username is already taken by some other user.")]
     public IActionResult ChangeCredentials([FromBody] ChangeCredentialsDto credentialsDto)
     {
-        var currentUserIdClaim = User.Claims.Single(claim => claim.Type == ClaimTypes.NameIdentifier);
-        var currentUserId = Guid.Parse(currentUserIdClaim.Value);
-        
         var user = context.Users
             .Include(user => user.RefreshTokens)
-            .SingleOrDefault(user => user.Id == currentUserId);
+            .SingleOrDefault(user => user.Id == CurrentUser.Id);
         if (user is null)
         {
             return NotFound();
