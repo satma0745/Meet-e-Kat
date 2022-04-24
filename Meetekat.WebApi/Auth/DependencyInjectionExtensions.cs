@@ -11,7 +11,7 @@ public static class DependencyInjectionExtensions
         var authConfiguration = AuthConfiguration.FromApplicationConfiguration(configuration);
         
         services
-            .AddSingleton(() => new JwtTokenService(authConfiguration))
+            .AddSingleton(new JwtTokenService(authConfiguration))
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
