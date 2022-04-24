@@ -32,7 +32,7 @@ public class GetMeetupsFeature : FeatureBase
                 Tags = meetup.Tags,
                 StartTime = meetup.StartTime,
                 EndTime = meetup.EndTime,
-                Organizer = meetup.Organizer,
+                OrganizerId = meetup.OrganizerId,
                 SignedUpGuestsCount = meetup.SignedUpGuests.Count
             });
 
