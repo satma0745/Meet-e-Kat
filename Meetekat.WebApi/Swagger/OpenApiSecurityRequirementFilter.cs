@@ -1,6 +1,7 @@
 ﻿namespace Meetekat.WebApi.Swagger;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
@@ -30,22 +31,62 @@ public class OpenApiSecurityRequirementFilter: IOperationFilter
     {
         var actionMetadata = context.ApiDescription.ActionDescriptor.EndpointMetadata;
         
-        // Require authentication if action is marked with the [Authorize] attribute
-        var markedWithAuthorize = actionMetadata.Any(metadataItem => metadataItem is AuthorizeAttribute);
-        if (markedWithAuthorize)
+        // Only add authentication requirements if action is marked with the [Authorize] attribute.
+        // Action might also have multiple [Authorize] attributes.
+        var authorizeAttributes = actionMetadata.OfType<AuthorizeAttribute>().ToList();
+        if (!authorizeAttributes.Any())
         {
-            AddSecurityRequirement(operation);
+            return;
         }
+        
+        operation.Security.Add(AuthenticationRequirement);
+        AddFallback401UnauthorizedResponse(operation);
+        AddFallback403ForbiddenResponse(operation, authorizeAttributes);
     }
 
-    private static void AddSecurityRequirement(OpenApiOperation operation)
+    private static void AddFallback401UnauthorizedResponse(OpenApiOperation operation)
     {
-        operation.Security.Add(AuthenticationRequirement);
-            
-        if (!operation.Responses.ContainsKey("401"))
+        const string statusCode401Unauthorized = "401";
+        
+        if (operation.Responses.ContainsKey(statusCode401Unauthorized))
         {
-            var unauthorizedResponse = new OpenApiResponse {Description = "User must be authorized to perform this action."};
-            operation.Responses.Add("401", unauthorizedResponse);
+            // In some cases we might want to specify custom 401 Unauthorized response.
+            return;
         }
+
+        const string message = "User must be authorized to perform this action.";
+        var unauthorizedResponse = new OpenApiResponse {Description = message};
+        operation.Responses.Add(statusCode401Unauthorized, unauthorizedResponse);
+    }
+    
+    private static void AddFallback403ForbiddenResponse(OpenApiOperation operation, IEnumerable<AuthorizeAttribute> authorizeAttributes)
+    {
+        const string statusCode403Forbidden = "403";
+
+        // The "Roles" field is a comma delimited list of roles.
+        var roles = authorizeAttributes
+            .Select(authorizeAttribute => authorizeAttribute.Roles)
+            .Where(roles => !string.IsNullOrWhiteSpace(roles))
+            .SelectMany(roles => roles.Split(","))
+            .ToList();
+        if (!roles.Any())
+        {
+            // Any user can perform this action.
+            return;
+        }
+        
+        if (operation.Responses.ContainsKey(statusCode403Forbidden))
+        {
+            // In some cases we might want to specify custom 403 Forbidden response.
+            return;
+        }
+
+        var message = roles.Count switch
+        {
+            1 => $"Only a User with the \"{roles.Single()}\" Role can perform this action.",
+            _ => $"Only a User with one of the [{string.Join(", ", roles.Select(role => $"\"{role}\""))}] Roles can perform this action."
+        };
+        var forbiddenResponse = new OpenApiResponse {Description = message};
+        operation.Responses.Add(statusCode403Forbidden, forbiddenResponse);
     }
 }
