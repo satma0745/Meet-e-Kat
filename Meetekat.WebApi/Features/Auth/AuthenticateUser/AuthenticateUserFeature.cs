@@ -44,7 +44,7 @@ public class AuthenticateUserFeature : FeatureBase
         context.RefreshTokens.Add(refreshToken);
         context.SaveChanges();
         
-        var tokenPair = jwtTokenService.IssueTokenPair(user.Id, refreshToken.TokenId);
+        var tokenPair = jwtTokenService.IssueTokenPair(user, refreshToken.TokenId);
         var tokenPairDto = new TokenPairDto
         {
             AccessToken = tokenPair.AccessToken,
