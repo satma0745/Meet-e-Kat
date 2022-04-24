@@ -32,7 +32,8 @@ public class GetCurrentUserInfoFeature : FeatureBase
         var currentUserDto = new CurrentUserDto
         {
             Id = currentUser.Id,
-            Username = currentUser.Username
+            Username = currentUser.Username,
+            Role = currentUser.Role
         };
         return Ok(currentUserDto);
     }

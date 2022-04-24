@@ -34,6 +34,12 @@ public static class HttpResponseFactory
 
     /// <inheritdoc cref="ControllerBase.Unauthorized()"/>
     public static UnauthorizedResult Unauthorized() => new();
+
+    /// <summary>
+    /// Creates an <see cref="ForbidResult"/> that produces a <see cref="StatusCodes.Status403Forbidden"/> response.
+    /// </summary>
+    /// <returns>The created <see cref="ForbidResult"/> for the response.</returns>
+    public static ForbidResult Forbidden() => new();
     
     /// <inheritdoc cref="ControllerBase.NotFound()"/>
     public static NotFoundResult NotFound() => new();

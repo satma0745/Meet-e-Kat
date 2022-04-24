@@ -38,8 +38,8 @@ public class RegisteredMeetupDto
     [Required]
     public DateTime EndTime { get; init; }
     
-    /// <summary>Name of the Meetup organizer (may also be a company).</summary>
-    /// <example>Roy J. Jefferson</example>
+    /// <summary>ID of the Meetup Organizer.</summary>
+    /// <example>13371337-1337-1337-1337-133713371337</example>
     [Required]
-    public string Organizer { get; init; }
+    public Guid OrganizerId { get; init; }
 }

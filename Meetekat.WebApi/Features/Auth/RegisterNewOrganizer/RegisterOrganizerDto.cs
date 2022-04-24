@@ -1,10 +1,10 @@
-﻿namespace Meetekat.WebApi.Features.Auth.RegisterNewUser;
+﻿namespace Meetekat.WebApi.Features.Auth.RegisterNewOrganizer;
 
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 
 [UsedImplicitly(ImplicitUseKindFlags.Assign, ImplicitUseTargetFlags.WithMembers)]
-public class RegisterUserDto
+public class RegisterOrganizerDto
 {
     /// <summary>User's nickname, part of the signing credentials.</summary>
     /// <example>satma0745</example>

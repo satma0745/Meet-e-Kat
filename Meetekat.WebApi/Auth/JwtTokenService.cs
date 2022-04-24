@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using Meetekat.WebApi.Entities.Users;
 using Microsoft.IdentityModel.Tokens;
 
 public class JwtTokenService
@@ -40,11 +41,12 @@ public class JwtTokenService
         }
     }
 
-    public TokenPair IssueTokenPair(Guid userId, Guid refreshTokenId)
+    public TokenPair IssueTokenPair(User user, Guid refreshTokenId)
     {
         var accessTokenClaims = new Dictionary<string, object>
         {
-            {ClaimTypes.NameIdentifier, userId}
+            {ClaimTypes.NameIdentifier, user.Id},
+            {ClaimTypes.Role, user.Role}
         };
         var accessToken = IssueToken(accessTokenClaims, configuration.AccessTokenLifetime);
 

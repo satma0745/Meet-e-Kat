@@ -3,7 +3,7 @@
 using System;
 using System.Linq;
 using Meetekat.WebApi.Auth;
-using Meetekat.WebApi.Entities;
+using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Http;
@@ -39,8 +39,8 @@ public class RefreshTokenPairFeature : FeatureBase
             return BadRequest();
         }
 
-        var userStillExists = context.Users.Any(user => user.Id == refreshTokenRecord.UserId);
-        if (!userStillExists)
+        var user = context.Users.SingleOrDefault(user => user.Id == refreshTokenRecord.UserId);
+        if (user is null)
         {
             return BadRequest();
         }
@@ -57,7 +57,7 @@ public class RefreshTokenPairFeature : FeatureBase
         
         context.SaveChanges();
 
-        var tokenPair = jwtTokenService.IssueTokenPair(newRefreshTokenRecord.UserId, newRefreshTokenRecord.TokenId);
+        var tokenPair = jwtTokenService.IssueTokenPair(user, newRefreshTokenRecord.TokenId);
         var tokenPairDto = new TokenPairDto
         {
             AccessToken = tokenPair.AccessToken,

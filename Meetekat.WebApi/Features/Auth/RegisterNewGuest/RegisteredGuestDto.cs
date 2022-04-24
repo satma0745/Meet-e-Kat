@@ -1,11 +1,11 @@
-﻿namespace Meetekat.WebApi.Features.Auth.RegisterNewUser;
+﻿namespace Meetekat.WebApi.Features.Auth.RegisterNewGuest;
 
 using System;
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 
 [UsedImplicitly(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.WithMembers)]
-public class RegisteredUserDto
+public class RegisteredGuestDto
 {
     /// <summary>User's immutable unique identifier.</summary>
     /// <example>13371337-1337-1337-1337-133713371337</example>
@@ -16,4 +16,9 @@ public class RegisteredUserDto
     /// <example>satma0745</example>
     [Required]
     public string Username { get; init; }
+    
+    /// <summary>User's role in system.</summary>
+    /// <example>Guest</example>
+    [Required]
+    public string Role { get; init; }
 }

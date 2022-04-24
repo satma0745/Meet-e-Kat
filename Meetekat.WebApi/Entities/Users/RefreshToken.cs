@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Entities;
+﻿namespace Meetekat.WebApi.Entities.Users;
 
 using System;
 

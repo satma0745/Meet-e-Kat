@@ -70,6 +70,10 @@ public abstract class FeatureBase
     protected static UnauthorizedResult Unauthorized() =>
         HttpResponseFactory.Unauthorized();
 
+    /// <inheritdoc cref="HttpResponseFactory.Forbidden"/>
+    protected static ForbidResult Forbidden() =>
+        HttpResponseFactory.Forbidden();
+
     /// <inheritdoc cref="HttpResponseFactory.NotFound"/>
     protected static NotFoundResult NotFound() =>
         HttpResponseFactory.NotFound();

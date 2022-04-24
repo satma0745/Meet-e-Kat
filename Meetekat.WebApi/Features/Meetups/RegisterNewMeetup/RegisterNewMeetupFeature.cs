@@ -1,9 +1,12 @@
 ﻿namespace Meetekat.WebApi.Features.Meetups.RegisterNewMeetup;
 
 using System;
+using System.Linq;
 using Meetekat.WebApi.Entities;
+using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,10 +20,18 @@ public class RegisterNewMeetupFeature : FeatureBase
 
     [Tags(ApiSections.Meetups)]
     [HttpPost("/api/meetups")]
+    [Authorize(Roles = nameof(Organizer))]
     [SwaggerOperation("Register a new meetup.")]
     [SwaggerResponse(StatusCodes.Status201Created, "A new meetup is registered successfully.", typeof(RegisteredMeetupDto))]
     public IActionResult RegisterNewMeetup([FromBody] RegisterMeetupDto registerDto)
     {
+        var organizerExists = context.Organizers.Any(organizer => organizer.Id == Caller.UserId);
+        if (!organizerExists)
+        {
+            // Can happen if deleted Organizer tries to register a new Meetup (if the Access Token hasn't yet expired).
+            return Unauthorized();
+        }
+        
         var meetup = new Meetup
         {
             Id = Guid.NewGuid(),
@@ -29,7 +40,7 @@ public class RegisterNewMeetupFeature : FeatureBase
             Tags = registerDto.Tags,
             StartTime = registerDto.StartTime,
             EndTime = registerDto.EndTime,
-            Organizer = registerDto.Organizer
+            OrganizerId = Caller.UserId
         };
 
         context.Meetups.Add(meetup);
@@ -43,7 +54,7 @@ public class RegisterNewMeetupFeature : FeatureBase
             Tags = meetup.Tags,
             StartTime = meetup.StartTime,
             EndTime = meetup.EndTime,
-            Organizer = meetup.Organizer
+            OrganizerId = meetup.OrganizerId
         };
         return Created(registeredDto);
     }

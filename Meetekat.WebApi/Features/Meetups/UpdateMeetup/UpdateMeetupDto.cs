@@ -36,10 +36,4 @@ public class UpdateMeetupDto
     /// <example>2022-04-22T21:30:00.000Z</example>
     [NotEmpty]
     public DateTime EndTime { get; set; }
-    
-    /// <summary>Name of the Meetup organizer (may also be a company).</summary>
-    /// <example>Roy J. Jefferson</example>
-    [Required]
-    [MaxLength(80)]
-    public string Organizer { get; set; }
 }

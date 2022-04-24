@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using BCrypt.Net;
 using Meetekat.WebApi.Auth;
-using Meetekat.WebApi.Entities;
+using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Http;
@@ -44,7 +44,7 @@ public class AuthenticateUserFeature : FeatureBase
         context.RefreshTokens.Add(refreshToken);
         context.SaveChanges();
         
-        var tokenPair = jwtTokenService.IssueTokenPair(user.Id, refreshToken.TokenId);
+        var tokenPair = jwtTokenService.IssueTokenPair(user, refreshToken.TokenId);
         var tokenPairDto = new TokenPairDto
         {
             AccessToken = tokenPair.AccessToken,
