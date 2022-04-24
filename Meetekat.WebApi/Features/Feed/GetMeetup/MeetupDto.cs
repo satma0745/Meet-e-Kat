@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.RegisterNewMeetup;
+﻿namespace Meetekat.WebApi.Features.Feed.GetMeetup;
 
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 
 [UsedImplicitly(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.WithMembers)]
-public class RegisteredMeetupDto
+public class MeetupDto
 {
     /// <summary>Meetup ID.</summary>
     /// <example>07450745-0745-0745-0745-074507450745</example>
@@ -42,4 +42,9 @@ public class RegisteredMeetupDto
     /// <example>13371337-1337-1337-1337-133713371337</example>
     [Required]
     public Guid OrganizerId { get; init; }
+    
+    /// <summary>The number of Guests who decided to sign up for a meetup.</summary>
+    /// <example>17</example>
+    [Required]
+    public int SignedUpGuestsCount { get; init; }
 }

@@ -18,7 +18,7 @@ public class RegisterNewOrganizerFeature : FeatureBase
         this.context = context;
 
     [Tags(ApiSections.Auth)]
-    [HttpPost("/api/organizers")]
+    [HttpPost("/api/auth/register-new-organizer")]
     [SwaggerOperation("Register a new Organizer.")]
     [SwaggerResponse(StatusCodes.Status201Created, "A new Organizer was registered successfully.", typeof(RegisteredOrganizerDto))]
     [SwaggerResponse(StatusCodes.Status409Conflict, "Specified username is already taken by some other user.")]

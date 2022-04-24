@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.RegisterNewMeetup;
+﻿namespace Meetekat.WebApi.Features.Studio.RegisterNewMeetup;
 
 using System;
 using System.Linq;
@@ -18,8 +18,8 @@ public class RegisterNewMeetupFeature : FeatureBase
     public RegisterNewMeetupFeature(ApplicationContext context) =>
         this.context = context;
 
-    [Tags(ApiSections.Meetups)]
-    [HttpPost("/api/meetups")]
+    [Tags(ApiSections.Studio)]
+    [HttpPost("/api/studio/register-new-meetup")]
     [Authorize(Roles = nameof(Organizer))]
     [SwaggerOperation("Register a new meetup.")]
     [SwaggerResponse(StatusCodes.Status201Created, "A new meetup is registered successfully.", typeof(RegisteredMeetupDto))]

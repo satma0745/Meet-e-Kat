@@ -18,7 +18,7 @@ public class RegisterNewGuestFeature : FeatureBase
         this.context = context;
 
     [Tags(ApiSections.Auth)]
-    [HttpPost("/api/guests")]
+    [HttpPost("/api/auth/register-new-guest")]
     [SwaggerOperation("Register a new Guest.")]
     [SwaggerResponse(StatusCodes.Status201Created, "A new Guest was registered successfully.", typeof(RegisteredGuestDto))]
     [SwaggerResponse(StatusCodes.Status409Conflict, "Specified username is already taken by some other user.")]

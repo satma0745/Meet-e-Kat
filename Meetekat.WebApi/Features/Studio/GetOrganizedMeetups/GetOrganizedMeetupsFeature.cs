@@ -1,30 +1,34 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.GetMeetups;
+﻿namespace Meetekat.WebApi.Features.Studio.GetOrganizedMeetups;
 
 using System.Collections.Generic;
 using System.Linq;
+using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
-public class GetMeetupsFeature : FeatureBase
+public class GetOrganizedMeetupsFeature : FeatureBase
 {
     private readonly ApplicationContext context;
 
-    public GetMeetupsFeature(ApplicationContext context) =>
+    public GetOrganizedMeetupsFeature(ApplicationContext context) =>
         this.context = context;
 
-    [Tags(ApiSections.Meetups)]
-    [HttpGet("/api/meetups")]
-    [SwaggerOperation("Get all meetups.")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Meetups retrieved successfully.", typeof(IEnumerable<MeetupDto>))]
-    public IActionResult GetMeetups()
+    [Tags(ApiSections.Studio)]
+    [HttpGet("/api/studio/get-organized-meetups")]
+    [Authorize(Roles = nameof(Organizer))]
+    [SwaggerOperation("Get all Meetups organized by the current User.")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Meetups retrieved successfully.", typeof(IEnumerable<OrganizedMeetupDto>))]
+    public IActionResult GetOrganizedMeetups()
     {
         var meetupOutputDtos = context.Meetups
             .Include(meetup => meetup.SignedUpGuests)
-            .Select(meetup => new MeetupDto
+            .Where(meetup => meetup.OrganizerId == Caller.UserId)
+            .Select(meetup => new Feed.GetMeetups.MeetupDto
             {
                 Id = meetup.Id,
                 Title = meetup.Title,

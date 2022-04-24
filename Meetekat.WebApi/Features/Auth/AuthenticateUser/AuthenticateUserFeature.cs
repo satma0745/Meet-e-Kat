@@ -23,7 +23,7 @@ public class AuthenticateUserFeature : FeatureBase
     }
 
     [Tags(ApiSections.Auth)]
-    [HttpPost("/api/token-pairs")]
+    [HttpPost("/api/auth/issue-token-pair")]
     [SwaggerOperation("Authenticate a User with provided credentials.")]
     [SwaggerResponse(StatusCodes.Status200OK, "User authenticated successfully.", typeof(TokenPairDto))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "User with the provided credentials doesn't exist.")]

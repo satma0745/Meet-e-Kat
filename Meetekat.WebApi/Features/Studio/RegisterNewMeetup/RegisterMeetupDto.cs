@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.UpdateMeetup;
+﻿namespace Meetekat.WebApi.Features.Studio.RegisterNewMeetup;
 
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 using Meetekat.WebApi.Seedwork.Validation;
 
 [UsedImplicitly(ImplicitUseKindFlags.Assign, ImplicitUseTargetFlags.WithMembers)]
-public class UpdateMeetupDto
+public class RegisterMeetupDto
 {
     /// <summary>Meetup Title.</summary>
     /// <example>Microsoft's naming issues.</example>
