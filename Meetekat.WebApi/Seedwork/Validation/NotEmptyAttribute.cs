@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Validation;
+﻿namespace Meetekat.WebApi.Seedwork.Validation;
 
 using System;
 using System.ComponentModel.DataAnnotations;
