@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.GetMeetups;
+﻿namespace Meetekat.WebApi.Features.Feed.GetMeetups;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ public class GetMeetupsFeature : FeatureBase
     public GetMeetupsFeature(ApplicationContext context) =>
         this.context = context;
 
-    [Tags(ApiSections.Meetups)]
+    [Tags(ApiSections.Feed)]
     [HttpGet("/api/meetups")]
     [SwaggerOperation("Get all meetups.")]
     [SwaggerResponse(StatusCodes.Status200OK, "Meetups retrieved successfully.", typeof(IEnumerable<MeetupDto>))]

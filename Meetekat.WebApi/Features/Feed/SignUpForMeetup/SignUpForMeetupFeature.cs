@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.SignUpForMeetup;
+﻿namespace Meetekat.WebApi.Features.Feed.SignUpForMeetup;
 
 using System;
 using System.Linq;
@@ -18,7 +18,7 @@ public class SignUpForMeetupFeature : FeatureBase
     public SignUpForMeetupFeature(ApplicationContext context) =>
         this.context = context;
 
-    [Tags(ApiSections.Meetups)]
+    [Tags(ApiSections.Feed)]
     [HttpPost("/api/meetups/{meetupId:guid}/signups")]
     [Authorize(Roles = nameof(Guest))]
     [SwaggerOperation("Sign up for a specific Meetup with matching ID.")]

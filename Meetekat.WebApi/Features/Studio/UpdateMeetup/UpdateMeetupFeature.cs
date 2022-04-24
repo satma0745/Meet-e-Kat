@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.UpdateMeetup;
+﻿namespace Meetekat.WebApi.Features.Studio.UpdateMeetup;
 
 using System;
 using System.Linq;
@@ -17,7 +17,7 @@ public class UpdateMeetupFeature : FeatureBase
     public UpdateMeetupFeature(ApplicationContext context) =>
         this.context = context;
 
-    [Tags(ApiSections.Meetups)]
+    [Tags(ApiSections.Studio)]
     [HttpPut("/api/meetups/{meetupId:guid}")]
     [Authorize(Roles = nameof(Organizer))]
     [SwaggerOperation("Update a Meetup with the matching ID.")]

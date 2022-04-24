@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.UpdateMeetup;
+﻿namespace Meetekat.WebApi.Features.Studio.UpdateMeetup;
 
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.GetOrganizedMeetups;
+﻿namespace Meetekat.WebApi.Features.Studio.GetOrganizedMeetups;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ public class GetOrganizedMeetupsFeature : FeatureBase
     public GetOrganizedMeetupsFeature(ApplicationContext context) =>
         this.context = context;
 
-    [Tags(ApiSections.Meetups)]
+    [Tags(ApiSections.Studio)]
     [HttpGet("/api/meetups/organized")]
     [Authorize(Roles = nameof(Organizer))]
     [SwaggerOperation("Get all Meetups organized by the current User.")]
@@ -28,7 +28,7 @@ public class GetOrganizedMeetupsFeature : FeatureBase
         var meetupOutputDtos = context.Meetups
             .Include(meetup => meetup.SignedUpGuests)
             .Where(meetup => meetup.OrganizerId == Caller.UserId)
-            .Select(meetup => new GetMeetups.MeetupDto
+            .Select(meetup => new Feed.GetMeetups.MeetupDto
             {
                 Id = meetup.Id,
                 Title = meetup.Title,

@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.GetMeetups;
+﻿namespace Meetekat.WebApi.Features.Feed.GetMeetup;
 
 using System;
 using System.Collections.Generic;

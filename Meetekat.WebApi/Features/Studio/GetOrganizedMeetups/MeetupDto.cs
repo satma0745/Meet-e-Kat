@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.GetMeetup;
+﻿namespace Meetekat.WebApi.Features.Studio.GetOrganizedMeetups;
 
 using System;
 using System.Collections.Generic;

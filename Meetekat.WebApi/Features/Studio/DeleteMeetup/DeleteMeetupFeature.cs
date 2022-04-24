@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.DeleteMeetup;
+﻿namespace Meetekat.WebApi.Features.Studio.DeleteMeetup;
 
 using System;
 using System.Linq;
@@ -17,7 +17,7 @@ public class DeleteMeetupFeature : FeatureBase
     public DeleteMeetupFeature(ApplicationContext context) =>
         this.context = context;
 
-    [Tags(ApiSections.Meetups)]
+    [Tags(ApiSections.Studio)]
     [HttpDelete("/api/meetups/{meetupId:guid}")]
     [Authorize(Roles = nameof(Organizer))]
     [SwaggerOperation("Delete a Meetup with matching ID.")]

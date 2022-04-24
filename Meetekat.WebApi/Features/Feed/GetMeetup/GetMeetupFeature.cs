@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Features.Meetups.GetMeetup;
+﻿namespace Meetekat.WebApi.Features.Feed.GetMeetup;
 
 using System;
 using System.Linq;
@@ -16,7 +16,7 @@ public class GetMeetupFeature : FeatureBase
     public GetMeetupFeature(ApplicationContext context) =>
         this.context = context;
 
-    [Tags(ApiSections.Meetups)]
+    [Tags(ApiSections.Feed)]
     [HttpGet("/api/meetup/{meetupId:guid}")]
     [SwaggerOperation("Get a specific Meetups with matching ID.")]
     [SwaggerResponse(StatusCodes.Status200OK, "Meetup retrieved successfully.", typeof(MeetupDto))]
