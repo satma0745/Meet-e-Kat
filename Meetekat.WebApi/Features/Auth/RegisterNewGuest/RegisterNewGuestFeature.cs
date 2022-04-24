@@ -44,7 +44,7 @@ public class RegisterNewGuestFeature : FeatureBase
         {
             Id = guest.Id,
             Username = guest.Username,
-            Role = guest.Role.ToString()
+            Role = guest.Role
         };
         return Created(registeredDto);
     }

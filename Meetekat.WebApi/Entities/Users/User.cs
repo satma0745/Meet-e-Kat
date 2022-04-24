@@ -11,7 +11,7 @@ public abstract class User
     
     public string Password { get; set; }
     
-    public abstract UserRole Role { get; }
+    public abstract string Role { get; }
     
     public ICollection<RefreshToken> RefreshTokens { get; set; }
 }

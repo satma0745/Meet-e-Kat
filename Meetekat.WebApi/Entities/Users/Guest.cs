@@ -2,5 +2,5 @@
 
 public class Guest : User
 {
-    public override UserRole Role => UserRole.Guest;
+    public override string Role => nameof(Guest);
 }

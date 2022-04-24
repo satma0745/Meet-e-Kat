@@ -33,7 +33,7 @@ public class GetCurrentUserInfoFeature : FeatureBase
         {
             Id = currentUser.Id,
             Username = currentUser.Username,
-            Role = currentUser.Role.ToString()
+            Role = currentUser.Role
         };
         return Ok(currentUserDto);
     }
