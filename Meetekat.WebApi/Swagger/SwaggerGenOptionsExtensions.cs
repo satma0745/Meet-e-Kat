@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Seedwork.Swagger;
+﻿namespace Meetekat.WebApi.Swagger;
 
 using System;
 using System.IO;

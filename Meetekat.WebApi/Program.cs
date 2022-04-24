@@ -1,6 +1,6 @@
 using Meetekat.WebApi.Auth;
 using Meetekat.WebApi.Persistence;
-using Meetekat.WebApi.Seedwork.Swagger;
+using Meetekat.WebApi.Swagger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,8 +21,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
 var app = builder.Build();
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerDocs();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

@@ -22,5 +22,10 @@ public static class ConfigurationValidationExtensions
     public static int AsInt(this ConfigurationParameter configurationParameter) =>
         int.TryParse(configurationParameter.StringValue, out var intValue)
             ? intValue
-            : throw InvalidConfigurationException.NotInteger(configurationParameter.ParameterName);
+            : throw InvalidConfigurationException.NotInt(configurationParameter.ParameterName);
+
+    public static bool AsBool(this ConfigurationParameter configurationParameter) =>
+        bool.TryParse(configurationParameter.StringValue, out var boolValue)
+            ? boolValue
+            : throw InvalidConfigurationException.NotBool(configurationParameter.ParameterName);
 }
