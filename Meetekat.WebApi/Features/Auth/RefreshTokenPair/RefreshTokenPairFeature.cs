@@ -5,6 +5,7 @@ using System.Linq;
 using Meetekat.WebApi.Auth;
 using Meetekat.WebApi.Entities;
 using Meetekat.WebApi.Persistence;
+using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

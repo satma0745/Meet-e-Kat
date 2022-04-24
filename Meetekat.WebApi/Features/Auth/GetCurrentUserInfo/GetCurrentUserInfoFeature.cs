@@ -2,6 +2,7 @@
 
 using System.Linq;
 using Meetekat.WebApi.Persistence;
+using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,7 @@ public class GetCurrentUserInfoFeature : FeatureBase
     [SwaggerResponse(StatusCodes.Status200OK, "Current User info retrieved successfully.", typeof(CurrentUserDto))]
     public IActionResult GetCurrentUserInfo()
     {
-        var currentUser = context.Users.SingleOrDefault(user => user.Id == CurrentUser.Id);
+        var currentUser = context.Users.SingleOrDefault(user => user.Id == Caller.UserId);
         if (currentUser is null)
         {
             // This can happen when User is deleted, but his token is still not expired.

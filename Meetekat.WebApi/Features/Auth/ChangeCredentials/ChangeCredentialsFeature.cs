@@ -3,6 +3,7 @@
 using System.Linq;
 using BCrypt.Net;
 using Meetekat.WebApi.Persistence;
+using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ public class ChangeCredentialsFeature : FeatureBase
     {
         var user = context.Users
             .Include(user => user.RefreshTokens)
-            .SingleOrDefault(user => user.Id == CurrentUser.Id);
+            .SingleOrDefault(user => user.Id == Caller.UserId);
         if (user is null)
         {
             return NotFound();

@@ -1,5 +1,6 @@
 namespace Meetekat.WebApi.Features.HealthChecks;
 
+using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
