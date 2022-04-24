@@ -16,4 +16,9 @@ public class CurrentUserDto
     /// <example>satma0745</example>
     [Required]
     public string Username { get; init; }
+    
+    /// <summary>User's role in system.</summary>
+    /// <example>Guest</example>
+    [Required]
+    public string Role { get; init; }
 }

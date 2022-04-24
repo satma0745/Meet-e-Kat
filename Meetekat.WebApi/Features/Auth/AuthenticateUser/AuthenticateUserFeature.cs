@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using BCrypt.Net;
 using Meetekat.WebApi.Auth;
-using Meetekat.WebApi.Entities;
+using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Http;
