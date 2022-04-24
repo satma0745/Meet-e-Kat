@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Auth;
+﻿namespace Meetekat.WebApi.Swagger;
 
 using System;
 using System.Linq;
