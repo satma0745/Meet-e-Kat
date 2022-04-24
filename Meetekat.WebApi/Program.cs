@@ -1,40 +1,22 @@
 using System;
-using System.IO;
-using System.Reflection;
 using System.Text;
 using Meetekat.WebApi.Auth;
 using Meetekat.WebApi.Persistence;
+using Meetekat.WebApi.Seedwork.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Annotations;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(options =>
 {
-    // Resolve duplicating DTO names.
-    options.CustomSchemaIds(dtoType => dtoType.FullName);
-    
-    // XML Documentation Comments integration.
-    var webApiProjectName = Assembly.GetExecutingAssembly().GetName().Name;
-    var pathToXmlCommentsFile = Path.Combine(AppContext.BaseDirectory, $"{webApiProjectName}.xml");
-    options.IncludeXmlComments(pathToXmlCommentsFile);
-
-    // Swashbuckle.AspNetCore.Annotations integration.
-    options.OperationFilter<AnnotationsOperationFilter>();
-    
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "Put Your access token here:",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT"
-    });
-    options.OperationFilter<OpenApiSecurityRequirementFilter>();
+    options.UseTypeFullNameForDtoSchemas();
+    options.IncludeXmlComments();
+    options.IncludeSwaggerAnnotations();
+    options.AddJwtSecurity();
 });
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
