@@ -1,6 +1,6 @@
 ﻿namespace Meetekat.WebApi.Persistence;
 
-using System;
+using System.Reflection;
 using Meetekat.WebApi.Entities;
 using Meetekat.WebApi.Entities.Users;
 using Microsoft.EntityFrameworkCore;
@@ -17,17 +17,6 @@ public class ApplicationContext : DbContext
         : base(options) =>
         Database.EnsureCreated();
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder
-            .Entity<Meetup>()
-            .Property(meetup => meetup.Tags)
-            .HasConversion(
-                tags => string.Join(';', tags),
-                aggregate => aggregate.Split(';', StringSplitOptions.None));
-
-        modelBuilder
-            .Entity<RefreshToken>()
-            .HasKey(refreshToken => refreshToken.TokenId);
-    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder) =>
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 }
