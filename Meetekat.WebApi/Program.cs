@@ -1,4 +1,4 @@
-using Meetekat.WebApi.Auth;
+using Meetekat.WebApi.Auth.Configuration;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Swagger;
 using Microsoft.AspNetCore.Builder;

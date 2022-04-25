@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Auth;
+﻿namespace Meetekat.WebApi.Auth.Models;
 
 public class TokenPair
 {

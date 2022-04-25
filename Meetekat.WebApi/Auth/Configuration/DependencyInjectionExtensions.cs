@@ -1,5 +1,6 @@
-﻿namespace Meetekat.WebApi.Auth;
+﻿namespace Meetekat.WebApi.Auth.Configuration;
 
+using Meetekat.WebApi.Auth.Implementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,10 +1,12 @@
-﻿namespace Meetekat.WebApi.Auth;
+﻿namespace Meetekat.WebApi.Auth.Implementation;
 
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using Meetekat.WebApi.Auth.Configuration;
+using Meetekat.WebApi.Auth.Models;
 using Meetekat.WebApi.Entities.Users;
 using Microsoft.IdentityModel.Tokens;
 

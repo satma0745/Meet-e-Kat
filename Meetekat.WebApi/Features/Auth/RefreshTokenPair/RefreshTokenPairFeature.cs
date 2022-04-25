@@ -2,7 +2,7 @@
 
 using System;
 using System.Linq;
-using Meetekat.WebApi.Auth;
+using Meetekat.WebApi.Auth.Implementation;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
