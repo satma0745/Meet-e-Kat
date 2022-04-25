@@ -14,8 +14,9 @@ public class ApplicationContext : DbContext
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     public ApplicationContext(DbContextOptions<ApplicationContext> options)
-        : base(options) =>
-        Database.EnsureCreated();
+        : base(options)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
