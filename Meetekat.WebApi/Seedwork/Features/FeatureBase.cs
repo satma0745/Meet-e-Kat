@@ -7,6 +7,7 @@ using Meetekat.WebApi.Seedwork.Features.Authentication;
 using Meetekat.WebApi.Seedwork.Features.Http;
 using Microsoft.AspNetCore.Mvc;
 
+[UsedImplicitly(ImplicitUseTargetFlags.Itself | ImplicitUseTargetFlags.Members | ImplicitUseTargetFlags.WithInheritors)]
 [ApiController]
 [Consumes(MediaTypeNames.Application.Json)]
 [Produces(MediaTypeNames.Application.Json)]
