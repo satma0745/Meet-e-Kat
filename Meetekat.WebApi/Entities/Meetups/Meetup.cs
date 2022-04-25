@@ -1,4 +1,4 @@
-﻿namespace Meetekat.WebApi.Entities;
+﻿namespace Meetekat.WebApi.Entities.Meetups;
 
 using System;
 using System.Collections.Generic;
@@ -12,8 +12,6 @@ public class Meetup
 
     public string Description { get; set; }
     
-    public ICollection<string> Tags { get; set; }
-    
     public DateTime StartTime { get; set; }
     
     public DateTime EndTime { get; set; }
@@ -21,6 +19,8 @@ public class Meetup
     public Guid OrganizerId { get; set; }
     
     public Organizer Organizer { get; set; }
+    
+    public ICollection<Tag> Tags { get; set; }
     
     public ICollection<Guest> SignedUpGuests { get; set; }
 }

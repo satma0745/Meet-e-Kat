@@ -25,6 +25,7 @@ public class GetMeetupFeature : FeatureBase
     public IActionResult GetMeetup([FromQuery] [Required] Guid meetupId)
     {
         var meetup = context.Meetups
+            .Include(meetup => meetup.Tags)
             .Include(meetup => meetup.SignedUpGuests)
             .SingleOrDefault(meetup => meetup.Id == meetupId);
         if (meetup is null)
@@ -37,7 +38,7 @@ public class GetMeetupFeature : FeatureBase
             Id = meetup.Id,
             Title = meetup.Title,
             Description = meetup.Description,
-            Tags = meetup.Tags,
+            Tags = meetup.Tags.Select(tag => tag.Name),
             StartTime = meetup.StartTime,
             EndTime = meetup.EndTime,
             OrganizerId = meetup.OrganizerId,

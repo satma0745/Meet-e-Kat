@@ -23,13 +23,14 @@ public class GetMeetupsFeature : FeatureBase
     public IActionResult GetMeetups()
     {
         var meetupOutputDtos = context.Meetups
+            .Include(meetup => meetup.Tags)
             .Include(meetup => meetup.SignedUpGuests)
             .Select(meetup => new MeetupDto
             {
                 Id = meetup.Id,
                 Title = meetup.Title,
                 Description = meetup.Description,
-                Tags = meetup.Tags,
+                Tags = meetup.Tags.Select(tag => tag.Name),
                 StartTime = meetup.StartTime,
                 EndTime = meetup.EndTime,
                 OrganizerId = meetup.OrganizerId,

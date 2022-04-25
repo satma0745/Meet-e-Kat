@@ -3,12 +3,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Meetekat.WebApi.Entities.Meetups;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
 public class UpdateMeetupFeature : FeatureBase
@@ -27,7 +29,9 @@ public class UpdateMeetupFeature : FeatureBase
     [SwaggerResponse(StatusCodes.Status404NotFound, "A Meetup with the specified ID doesn't exist.")]
     public IActionResult UpdateMeetup([FromQuery] [Required] Guid meetupId, [FromBody] UpdateMeetupDto updateDto)
     {
-        var meetup = context.Meetups.SingleOrDefault(meetup => meetup.Id == meetupId);
+        var meetup = context.Meetups
+            .Include(meetup => meetup.Tags)
+            .SingleOrDefault(meetup => meetup.Id == meetupId);
         if (meetup is null)
         {
             return NotFound();
@@ -44,10 +48,18 @@ public class UpdateMeetupFeature : FeatureBase
             // Only a Meetup's direct Organizer can update the Meetup.
             return Forbidden();
         }
+        
+        // Retrieve already existing Tags and create lacking ones.
+        var persistedTags = context.Tags.Where(tag => updateDto.Tags.Contains(tag.Name)).ToList();
+        var newTags = updateDto.Tags
+            .Where(tagName => persistedTags.All(persistedTag => persistedTag.Name != tagName))
+            .Select(tagName => new Tag { Id = Guid.NewGuid(), Name = tagName })
+            .ToList();
+        var tags = persistedTags.Concat(newTags).ToList();
 
         meetup.Title = updateDto.Title;
         meetup.Description = updateDto.Description;
-        meetup.Tags = updateDto.Tags;
+        meetup.Tags = tags;
         meetup.StartTime = updateDto.StartTime;
         meetup.EndTime = updateDto.EndTime;
         context.SaveChanges();
@@ -57,7 +69,7 @@ public class UpdateMeetupFeature : FeatureBase
             Id = meetup.Id,
             Title = meetup.Title,
             Description = meetup.Description,
-            Tags = meetup.Tags,
+            Tags = meetup.Tags.Select(tag => tag.Name),
             StartTime = meetup.StartTime,
             EndTime = meetup.EndTime,
             OrganizerId = meetup.OrganizerId

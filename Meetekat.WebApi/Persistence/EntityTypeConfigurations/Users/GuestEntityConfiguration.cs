@@ -1,7 +1,7 @@
 ﻿namespace Meetekat.WebApi.Persistence.EntityTypeConfigurations.Users;
 
 using System.Collections.Generic;
-using Meetekat.WebApi.Entities;
+using Meetekat.WebApi.Entities.Meetups;
 using Meetekat.WebApi.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

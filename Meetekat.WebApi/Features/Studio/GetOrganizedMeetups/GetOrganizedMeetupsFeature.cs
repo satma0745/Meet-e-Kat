@@ -26,14 +26,15 @@ public class GetOrganizedMeetupsFeature : FeatureBase
     public IActionResult GetOrganizedMeetups()
     {
         var meetupOutputDtos = context.Meetups
+            .Include(meetup => meetup.Tags)
             .Include(meetup => meetup.SignedUpGuests)
             .Where(meetup => meetup.OrganizerId == Caller.UserId)
-            .Select(meetup => new Feed.GetMeetups.MeetupDto
+            .Select(meetup => new OrganizedMeetupDto
             {
                 Id = meetup.Id,
                 Title = meetup.Title,
                 Description = meetup.Description,
-                Tags = meetup.Tags,
+                Tags = meetup.Tags.Select(tag => tag.Name),
                 StartTime = meetup.StartTime,
                 EndTime = meetup.EndTime,
                 OrganizerId = meetup.OrganizerId,

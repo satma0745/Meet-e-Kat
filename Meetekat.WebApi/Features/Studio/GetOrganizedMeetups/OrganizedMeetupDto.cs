@@ -26,7 +26,7 @@ public class OrganizedMeetupDto
     /// <summary>Meetup Tags, Keywords.</summary>
     /// <example>["microsoft", ".net", "dotnet"]</example>
     [Required]
-    public ICollection<string> Tags { get; init; }
+    public IEnumerable<string> Tags { get; init; }
     
     /// <summary>Date and Time when the Meetup starts.</summary>
     /// <example>2022-04-22T16:30:00.000Z</example>

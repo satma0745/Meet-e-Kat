@@ -1,7 +1,6 @@
-﻿namespace Meetekat.WebApi.Persistence.EntityTypeConfigurations;
+﻿namespace Meetekat.WebApi.Persistence.EntityTypeConfigurations.Meetups;
 
-using System;
-using Meetekat.WebApi.Entities;
+using Meetekat.WebApi.Entities.Meetups;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -32,14 +31,6 @@ public class MeetupEntityConfiguration : IEntityTypeConfiguration<Meetup>
             .Property(meetup => meetup.Description)
             .IsRequired()
             .HasColumnName("description");
-        
-        meetupEntity
-            .Property(meetup => meetup.Tags)
-            .IsRequired()
-            .HasConversion(
-                tags => string.Join(';', tags),
-                aggregate => aggregate.Split(';', StringSplitOptions.None))
-            .HasColumnName("tags");
 
         meetupEntity
             .Property(meetup => meetup.StartTime)
