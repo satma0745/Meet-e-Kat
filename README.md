@@ -1,5 +1,8 @@
 # Meet-e-Kat
 
+Meetups ASP .Net Core WebAPI 
+
+
 ## How to Run
 
 ### Install all required Dependencies
