@@ -1,14 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿namespace Meetekat.WebApi.Persistence.Migrations;
 
-#nullable disable
+using Meetekat.WebApi.Seedwork.Persistence;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Meetekat.WebApi.Persistence.Migrations
+[DbContext(typeof(ApplicationContext))]
+[Migration("20220425063246_InitialMigration")]
+public class InitialMigration : SqlScriptMigration
 {
-    public partial class InitialMigration : Migration
-    {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            // This Migrations exists only to set up a Migration History. 
-        }
-    }
+    // This Migrations exists only to set up a Migration History.
+    protected override string MigrationScript => string.Empty;
 }

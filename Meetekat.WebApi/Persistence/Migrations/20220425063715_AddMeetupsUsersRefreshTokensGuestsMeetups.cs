@@ -1,113 +1,51 @@
-﻿using System;
+﻿namespace Meetekat.WebApi.Persistence.Migrations;
+
+using System;
+using Meetekat.WebApi.Seedwork.Persistence;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
-namespace Meetekat.WebApi.Persistence.Migrations
+[DbContext(typeof(ApplicationContext))]
+[Migration("20220425063715_AddMeetupsUsersRefreshTokensGuestsMeetups")]
+public class AddMeetupsUsersRefreshTokensGuestsMeetups : SqlScriptMigration
 {
-    public partial class AddMeetupsUsersRefreshTokensGuestsMeetups : Migration
-    {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.CreateTable(
-                name: "users",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    username = table.Column<string>(type: "text", nullable: false),
-                    password = table.Column<string>(type: "text", nullable: false),
-                    role = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_users", x => x.id);
-                });
+    protected override string MigrationScript => @"
+        CREATE TABLE users (
+            id uuid NOT NULL,
+            username text NOT NULL,
+            password text NOT NULL,
+            role text NOT NULL,
+            CONSTRAINT pk_users PRIMARY KEY (id)
+        );
+        CREATE UNIQUE INDEX ux_users_username ON users (username);
 
-            migrationBuilder.CreateTable(
-                name: "meetups",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    title = table.Column<string>(type: "text", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: false),
-                    tags = table.Column<string>(type: "text", nullable: false),
-                    start_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    end_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    organizer_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_meetups", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_organizers_meetups_organizer_id",
-                        column: x => x.organizer_id,
-                        principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+        CREATE TABLE refresh_tokens (
+            token_id uuid NOT NULL,
+            user_id uuid NOT NULL,
+            CONSTRAINT pk_refresh_tokens PRIMARY KEY (token_id),
+            CONSTRAINT fk_users_refresh_tokens_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        );
+        CREATE INDEX ix_refresh_tokens_user_id ON refresh_tokens (user_id);
 
-            migrationBuilder.CreateTable(
-                name: "refresh_tokens",
-                columns: table => new
-                {
-                    token_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    user_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_refresh_tokens", x => x.token_id);
-                    table.ForeignKey(
-                        name: "fk_users_refresh_tokens_user_id",
-                        column: x => x.user_id,
-                        principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+        CREATE TABLE meetups (
+            id uuid NOT NULL,
+            title text NOT NULL,
+            description text NOT NULL,
+            tags text NOT NULL,
+            start_time timestamp with time zone NOT NULL,
+            end_time timestamp with time zone NOT NULL,
+            organizer_id uuid NOT NULL,
+            CONSTRAINT pk_meetups PRIMARY KEY (id),
+            CONSTRAINT fk_organizers_meetups_organizer_id FOREIGN KEY (organizer_id) REFERENCES users (id) ON DELETE CASCADE
+        );
+        CREATE INDEX ix_meetups_organizer_id ON meetups (organizer_id);
 
-            migrationBuilder.CreateTable(
-                name: "meetups_users_signups",
-                columns: table => new
-                {
-                    meetup_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    guest_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_meetups_users_signups", x => new { x.meetup_id, x.guest_id });
-                    table.ForeignKey(
-                        name: "fk_meetups_meetups_users_signups_meetup_id",
-                        column: x => x.meetup_id,
-                        principalTable: "meetups",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_users_meetups_users_signups_guest_id",
-                        column: x => x.guest_id,
-                        principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "ix_meetups_organizer_id",
-                table: "meetups",
-                column: "organizer_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_meetups_users_signups_guest_id",
-                table: "meetups_users_signups",
-                column: "guest_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_refresh_tokens_user_id",
-                table: "refresh_tokens",
-                column: "user_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ux_users_username",
-                table: "users",
-                column: "username",
-                unique: true);
-        }
-    }
+        CREATE TABLE meetups_users_signups (
+            meetup_id uuid NOT NULL,
+            guest_id uuid NOT NULL,
+            CONSTRAINT pk_meetups_users_signups PRIMARY KEY (meetup_id, guest_id),
+            CONSTRAINT fk_meetups_meetups_users_signups_meetup_id FOREIGN KEY (meetup_id) REFERENCES meetups (id) ON DELETE CASCADE,
+            CONSTRAINT fk_users_meetups_users_signups_guest_id FOREIGN KEY (guest_id) REFERENCES users (id) ON DELETE CASCADE
+        );
+        CREATE INDEX ix_meetups_users_signups_guest_id ON meetups_users_signups (guest_id);";
 }
