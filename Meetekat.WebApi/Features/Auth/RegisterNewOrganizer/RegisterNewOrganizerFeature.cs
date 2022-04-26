@@ -1,13 +1,14 @@
 ﻿namespace Meetekat.WebApi.Features.Auth.RegisterNewOrganizer;
 
 using System;
-using System.Linq;
+using System.Threading.Tasks;
 using BCrypt.Net;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
 public class RegisterNewOrganizerFeature : FeatureBase
@@ -22,9 +23,9 @@ public class RegisterNewOrganizerFeature : FeatureBase
     [SwaggerOperation("Register a new Organizer.")]
     [SwaggerResponse(StatusCodes.Status201Created, "A new Organizer was registered successfully.", typeof(RegisteredOrganizerDto))]
     [SwaggerResponse(StatusCodes.Status409Conflict, "Specified username is already taken by some other user.")]
-    public IActionResult RegisterNewOrganizer([FromBody] RegisterOrganizerDto registrationDto)
+    public async Task<IActionResult> RegisterNewOrganizer([FromBody] RegisterOrganizerDto registrationDto)
     {
-        var usernameAlreadyTaken = context.Users.Any(user => user.Username == registrationDto.Username);
+        var usernameAlreadyTaken = await context.Users.AnyAsync(user => user.Username == registrationDto.Username);
         if (usernameAlreadyTaken)
         {
             // TODO: Return the 400 Bad Request validation error, not 409 Conflict.
@@ -38,7 +39,7 @@ public class RegisterNewOrganizerFeature : FeatureBase
             Password = BCrypt.HashPassword(registrationDto.Password)
         };
         context.Organizers.Add(guest);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         var registeredDto = new RegisteredOrganizerDto
         {

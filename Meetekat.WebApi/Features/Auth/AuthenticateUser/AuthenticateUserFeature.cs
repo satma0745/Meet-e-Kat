@@ -1,7 +1,7 @@
 ﻿namespace Meetekat.WebApi.Features.Auth.AuthenticateUser;
 
 using System;
-using System.Linq;
+using System.Threading.Tasks;
 using BCrypt.Net;
 using Meetekat.WebApi.Auth.Implementation;
 using Meetekat.WebApi.Entities.Users;
@@ -9,6 +9,7 @@ using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
 public class AuthenticateUserFeature : FeatureBase
@@ -27,9 +28,9 @@ public class AuthenticateUserFeature : FeatureBase
     [SwaggerOperation("Authenticate a User with provided credentials.")]
     [SwaggerResponse(StatusCodes.Status200OK, "User authenticated successfully.", typeof(TokenPairDto))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "User with the provided credentials doesn't exist.")]
-    public IActionResult AuthenticateUser([FromBody] SigningCredentialsDto credentialsDto)
+    public async Task<IActionResult> AuthenticateUser([FromBody] SigningCredentialsDto credentialsDto)
     {
-        var user = context.Users.SingleOrDefault(user => user.Username == credentialsDto.Username);
+        var user = await context.Users.SingleOrDefaultAsync(user => user.Username == credentialsDto.Username);
         if (user is null || !BCrypt.Verify(credentialsDto.Password, user.Password))
         {
             // TODO: Return the 400 Bad Request validation error, not 404 Not Found.
@@ -42,7 +43,7 @@ public class AuthenticateUserFeature : FeatureBase
             UserId = user.Id
         };
         context.RefreshTokens.Add(refreshToken);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         
         var tokenPair = jwtTokenService.IssueTokenPair(user, refreshToken.TokenId);
         var tokenPairDto = new TokenPairDto

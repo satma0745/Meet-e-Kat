@@ -1,13 +1,14 @@
 ﻿namespace Meetekat.WebApi.Features.Auth.RegisterNewGuest;
 
 using System;
-using System.Linq;
+using System.Threading.Tasks;
 using BCrypt.Net;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
 public class RegisterNewGuestFeature : FeatureBase
@@ -22,9 +23,9 @@ public class RegisterNewGuestFeature : FeatureBase
     [SwaggerOperation("Register a new Guest.")]
     [SwaggerResponse(StatusCodes.Status201Created, "A new Guest was registered successfully.", typeof(RegisteredGuestDto))]
     [SwaggerResponse(StatusCodes.Status409Conflict, "Specified username is already taken by some other user.")]
-    public IActionResult RegisterNewGuest([FromBody] RegisterGuestDto registrationDto)
+    public async Task<IActionResult> RegisterNewGuest([FromBody] RegisterGuestDto registrationDto)
     {
-        var usernameAlreadyTaken = context.Users.Any(user => user.Username == registrationDto.Username);
+        var usernameAlreadyTaken = await context.Users.AnyAsync(user => user.Username == registrationDto.Username);
         if (usernameAlreadyTaken)
         {
             // TODO: Return the 400 Bad Request validation error, not 409 Conflict.
@@ -38,7 +39,7 @@ public class RegisterNewGuestFeature : FeatureBase
             Password = BCrypt.HashPassword(registrationDto.Password)
         };
         context.Guests.Add(guest);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         var registeredDto = new RegisteredGuestDto
         {

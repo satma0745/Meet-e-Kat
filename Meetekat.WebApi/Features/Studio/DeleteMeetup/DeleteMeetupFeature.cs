@@ -2,13 +2,14 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.Threading.Tasks;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
 public class DeleteMeetupFeature : FeatureBase
@@ -25,15 +26,15 @@ public class DeleteMeetupFeature : FeatureBase
     [SwaggerResponse(StatusCodes.Status204NoContent, "A Meetup with the specified ID was deleted successfully.")]
     [SwaggerResponse(StatusCodes.Status403Forbidden, "Only a Meetup's direct Organizer can delete the Meetup.")]
     [SwaggerResponse(StatusCodes.Status404NotFound, "A Meetup with the specified ID doesn't exist.")]
-    public IActionResult DeleteMeetup([FromQuery] [Required] Guid meetupId)
+    public async Task<IActionResult> DeleteMeetup([FromQuery] [Required] Guid meetupId)
     {
-        var meetup = context.Meetups.SingleOrDefault(meetup => meetup.Id == meetupId);
+        var meetup = await context.Meetups.SingleOrDefaultAsync(meetup => meetup.Id == meetupId);
         if (meetup is null)
         {
             return NotFound();
         }
         
-        var organizerExists = context.Organizers.Any(organizer => organizer.Id == Caller.UserId);
+        var organizerExists = await context.Organizers.AnyAsync(organizer => organizer.Id == Caller.UserId);
         if (!organizerExists)
         {
             // Can happen if deleted Organizer tries to delete a Meetup (if the Access Token hasn't yet expired).
@@ -46,7 +47,7 @@ public class DeleteMeetupFeature : FeatureBase
         }
 
         context.Meetups.Remove(meetup);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         return NoContent();
     }

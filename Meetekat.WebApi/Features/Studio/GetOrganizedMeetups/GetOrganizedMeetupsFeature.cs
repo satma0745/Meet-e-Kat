@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
@@ -23,9 +24,9 @@ public class GetOrganizedMeetupsFeature : FeatureBase
     [Authorize(Roles = nameof(Organizer))]
     [SwaggerOperation("Get all Meetups organized by the current User.")]
     [SwaggerResponse(StatusCodes.Status200OK, "Meetups retrieved successfully.", typeof(IEnumerable<OrganizedMeetupDto>))]
-    public IActionResult GetOrganizedMeetups()
+    public async Task<IActionResult> GetOrganizedMeetups()
     {
-        var meetupOutputDtos = context.Meetups
+        var meetupOutputDtos = await context.Meetups
             .Include(meetup => meetup.Tags)
             .Include(meetup => meetup.SignedUpGuests)
             .Where(meetup => meetup.OrganizerId == Caller.UserId)
@@ -39,7 +40,8 @@ public class GetOrganizedMeetupsFeature : FeatureBase
                 EndTime = meetup.EndTime,
                 OrganizerId = meetup.OrganizerId,
                 SignedUpGuestsCount = meetup.SignedUpGuests.Count
-            });
+            })
+            .ToListAsync();
 
         return Ok(meetupOutputDtos);
     }

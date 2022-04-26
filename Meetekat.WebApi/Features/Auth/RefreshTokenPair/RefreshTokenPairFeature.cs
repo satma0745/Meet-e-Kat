@@ -2,12 +2,14 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Meetekat.WebApi.Auth.Implementation;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
 public class RefreshTokenPairFeature : FeatureBase
@@ -26,20 +28,22 @@ public class RefreshTokenPairFeature : FeatureBase
     [SwaggerOperation("Refresh Token Pair.")]
     [SwaggerResponse(StatusCodes.Status200OK, "Token Pair was refreshed successfully.", typeof(TokenPairDto))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid, expired, used or fake Refresh Token was provided.")]
-    public IActionResult RefreshTokenPair([FromBody] string refreshToken)
+    public async Task<IActionResult> RefreshTokenPair([FromBody] string refreshToken)
     {
         if (!jwtTokenService.TryParseRefreshToken(refreshToken, out var refreshTokenPayload))
         {
             return BadRequest();
         }
 
-        var refreshTokenRecord = context.RefreshTokens.SingleOrDefault(token => token.TokenId == refreshTokenPayload.TokenId);
+        var refreshTokenRecord = await context.RefreshTokens
+            .Where(token => token.TokenId == refreshTokenPayload.TokenId)
+            .SingleOrDefaultAsync();
         if (refreshTokenRecord is null)
         {
             return BadRequest();
         }
 
-        var user = context.Users.SingleOrDefault(user => user.Id == refreshTokenRecord.UserId);
+        var user = await context.Users.SingleOrDefaultAsync(user => user.Id == refreshTokenRecord.UserId);
         if (user is null)
         {
             return BadRequest();
@@ -55,7 +59,7 @@ public class RefreshTokenPairFeature : FeatureBase
         context.RefreshTokens.Add(newRefreshTokenRecord);
         context.RefreshTokens.Remove(refreshTokenRecord);
         
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         var tokenPair = jwtTokenService.IssueTokenPair(user, newRefreshTokenRecord.TokenId);
         var tokenPairDto = new TokenPairDto

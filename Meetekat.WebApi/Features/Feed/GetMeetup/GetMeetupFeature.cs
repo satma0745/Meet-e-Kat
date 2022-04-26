@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Http;
@@ -22,12 +23,12 @@ public class GetMeetupFeature : FeatureBase
     [SwaggerOperation("Get a specific Meetups with matching ID.")]
     [SwaggerResponse(StatusCodes.Status200OK, "Meetup retrieved successfully.", typeof(MeetupDto))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Meetup with the specified ID doesn't exist")]
-    public IActionResult GetMeetup([FromQuery] [Required] Guid meetupId)
+    public async Task<IActionResult> GetMeetup([FromQuery] [Required] Guid meetupId)
     {
-        var meetup = context.Meetups
+        var meetup = await context.Meetups
             .Include(meetup => meetup.Tags)
             .Include(meetup => meetup.SignedUpGuests)
-            .SingleOrDefault(meetup => meetup.Id == meetupId);
+            .SingleOrDefaultAsync(meetup => meetup.Id == meetupId);
         if (meetup is null)
         {
             return NotFound();

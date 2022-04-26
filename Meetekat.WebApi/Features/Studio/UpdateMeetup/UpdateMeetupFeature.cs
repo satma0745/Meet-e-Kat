@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using Meetekat.WebApi.Entities.Meetups;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
@@ -27,17 +28,17 @@ public class UpdateMeetupFeature : FeatureBase
     [SwaggerResponse(StatusCodes.Status200OK, "A Meetup with the specified ID was updated successfully.", typeof(UpdatedMeetupDto))]
     [SwaggerResponse(StatusCodes.Status403Forbidden, "Only a Meetup's direct Organizer can update the Meetup.")]
     [SwaggerResponse(StatusCodes.Status404NotFound, "A Meetup with the specified ID doesn't exist.")]
-    public IActionResult UpdateMeetup([FromQuery] [Required] Guid meetupId, [FromBody] UpdateMeetupDto updateDto)
+    public async Task<IActionResult> UpdateMeetup([FromQuery] [Required] Guid meetupId, [FromBody] UpdateMeetupDto updateDto)
     {
-        var meetup = context.Meetups
+        var meetup = await context.Meetups
             .Include(meetup => meetup.Tags)
-            .SingleOrDefault(meetup => meetup.Id == meetupId);
+            .SingleOrDefaultAsync(meetup => meetup.Id == meetupId);
         if (meetup is null)
         {
             return NotFound();
         }
         
-        var organizerExists = context.Organizers.Any(organizer => organizer.Id == Caller.UserId);
+        var organizerExists = await context.Organizers.AnyAsync(organizer => organizer.Id == Caller.UserId);
         if (!organizerExists)
         {
             // Can happen if deleted Organizer tries to update a Meetup (if the Access Token hasn't yet expired).
@@ -50,7 +51,9 @@ public class UpdateMeetupFeature : FeatureBase
         }
         
         // Retrieve already existing Tags and create lacking ones.
-        var persistedTags = context.Tags.Where(tag => updateDto.Tags.Contains(tag.Name)).ToList();
+        var persistedTags = await context.Tags
+            .Where(tag => updateDto.Tags.Contains(tag.Name))
+            .ToListAsync();
         var newTags = updateDto.Tags
             .Where(tagName => persistedTags.All(persistedTag => persistedTag.Name != tagName))
             .Select(tagName => new Tag { Id = Guid.NewGuid(), Name = tagName })
@@ -62,7 +65,7 @@ public class UpdateMeetupFeature : FeatureBase
         meetup.Tags = tags;
         meetup.StartTime = updateDto.StartTime;
         meetup.EndTime = updateDto.EndTime;
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         var updatedDto = new UpdatedMeetupDto
         {

@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Http;
@@ -20,9 +21,9 @@ public class GetMeetupsFeature : FeatureBase
     [HttpGet("/api/feed/get-meetups")]
     [SwaggerOperation("Get all meetups.")]
     [SwaggerResponse(StatusCodes.Status200OK, "Meetups retrieved successfully.", typeof(IEnumerable<MeetupDto>))]
-    public IActionResult GetMeetups()
+    public async Task<IActionResult> GetMeetups()
     {
-        var meetupOutputDtos = context.Meetups
+        var meetupOutputDtos = await context.Meetups
             .Include(meetup => meetup.Tags)
             .Include(meetup => meetup.SignedUpGuests)
             .Select(meetup => new MeetupDto
@@ -35,7 +36,8 @@ public class GetMeetupsFeature : FeatureBase
                 EndTime = meetup.EndTime,
                 OrganizerId = meetup.OrganizerId,
                 SignedUpGuestsCount = meetup.SignedUpGuests.Count
-            });
+            })
+            .ToListAsync();
 
         return Ok(meetupOutputDtos);
     }

@@ -2,7 +2,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.Threading.Tasks;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
@@ -26,17 +26,17 @@ public class SignUpForMeetupFeature : FeatureBase
     [SwaggerResponse(StatusCodes.Status204NoContent, "Successfully signed up for a Meetup.")]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Meetup with the specified ID doesn't exist.")]
     [SwaggerResponse(StatusCodes.Status409Conflict, "You've already signed up for this specific meetup.")]
-    public IActionResult SignUpForMeetup([FromQuery] [Required] Guid meetupId)
+    public async Task<IActionResult> SignUpForMeetup([FromQuery] [Required] Guid meetupId)
     {
-        var meetup = context.Meetups
+        var meetup = await context.Meetups
             .Include(meetup => meetup.SignedUpGuests)
-            .SingleOrDefault(meetup => meetup.Id == meetupId);
+            .SingleOrDefaultAsync(meetup => meetup.Id == meetupId);
         if (meetup is null)
         {
             return NotFound();
         }
 
-        var currentUser = context.Guests.SingleOrDefault(guest => guest.Id == Caller.UserId);
+        var currentUser = await context.Guests.SingleOrDefaultAsync(guest => guest.Id == Caller.UserId);
         if (currentUser is null)
         {
             // Can happen if deleted User tries to sign up for a meetup (if the Access Token hasn't yet expired).
@@ -49,7 +49,7 @@ public class SignUpForMeetupFeature : FeatureBase
         }
 
         meetup.SignedUpGuests.Add(currentUser);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         return NoContent();
     }

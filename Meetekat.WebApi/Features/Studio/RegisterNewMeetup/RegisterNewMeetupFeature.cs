@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Meetekat.WebApi.Entities.Meetups;
 using Meetekat.WebApi.Entities.Users;
 using Meetekat.WebApi.Persistence;
@@ -9,6 +10,7 @@ using Meetekat.WebApi.Seedwork.Features;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
 public class RegisterNewMeetupFeature : FeatureBase
@@ -23,9 +25,9 @@ public class RegisterNewMeetupFeature : FeatureBase
     [Authorize(Roles = nameof(Organizer))]
     [SwaggerOperation("Register a new meetup.")]
     [SwaggerResponse(StatusCodes.Status201Created, "A new meetup is registered successfully.", typeof(RegisteredMeetupDto))]
-    public IActionResult RegisterNewMeetup([FromBody] RegisterMeetupDto registerDto)
+    public async Task<IActionResult> RegisterNewMeetup([FromBody] RegisterMeetupDto registerDto)
     {
-        var organizerExists = context.Organizers.Any(organizer => organizer.Id == Caller.UserId);
+        var organizerExists = await context.Organizers.AnyAsync(organizer => organizer.Id == Caller.UserId);
         if (!organizerExists)
         {
             // Can happen if deleted Organizer tries to register a new Meetup (if the Access Token hasn't yet expired).
@@ -33,7 +35,9 @@ public class RegisterNewMeetupFeature : FeatureBase
         }
 
         // Retrieve already existing Tags and create lacking ones.
-        var persistedTags = context.Tags.Where(tag => registerDto.Tags.Contains(tag.Name)).ToList();
+        var persistedTags = await context.Tags
+            .Where(tag => registerDto.Tags.Contains(tag.Name))
+            .ToListAsync();
         var newTags = registerDto.Tags
             .Where(tagName => persistedTags.All(persistedTag => persistedTag.Name != tagName))
             .Select(tagName => new Tag { Id = Guid.NewGuid(), Name = tagName })
@@ -51,7 +55,7 @@ public class RegisterNewMeetupFeature : FeatureBase
             OrganizerId = Caller.UserId
         };
         context.Meetups.Add(meetup);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         var registeredDto = new RegisteredMeetupDto
         {

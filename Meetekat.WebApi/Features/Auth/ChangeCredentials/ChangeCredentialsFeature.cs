@@ -1,6 +1,7 @@
 ﻿namespace Meetekat.WebApi.Features.Auth.ChangeCredentials;
 
 using System.Linq;
+using System.Threading.Tasks;
 using BCrypt.Net;
 using Meetekat.WebApi.Persistence;
 using Meetekat.WebApi.Seedwork.Features;
@@ -24,11 +25,11 @@ public class ChangeCredentialsFeature : FeatureBase
     [SwaggerResponse(StatusCodes.Status200OK, "Signing credentials were updated successfully.")]
     [SwaggerResponse(StatusCodes.Status404NotFound, "User with the specified ID doesn't exist.")]
     [SwaggerResponse(StatusCodes.Status409Conflict, "Specified username is already taken by some other user.")]
-    public IActionResult ChangeCredentials([FromBody] ChangeCredentialsDto credentialsDto)
+    public async Task<IActionResult> ChangeCredentials([FromBody] ChangeCredentialsDto credentialsDto)
     {
-        var user = context.Users
+        var user = await context.Users
             .Include(user => user.RefreshTokens)
-            .SingleOrDefault(user => user.Id == Caller.UserId);
+            .SingleOrDefaultAsync(user => user.Id == Caller.UserId);
         if (user is null)
         {
             return NotFound();
@@ -36,9 +37,9 @@ public class ChangeCredentialsFeature : FeatureBase
 
         // In this query we're excluding target User. This way User can preserve the Username
         // and only change the Password (without getting Username uniqueness violation error). 
-        var usernameAlreadyTaken = context.Users
+        var usernameAlreadyTaken = await context.Users
             .Where(anotherUser => anotherUser.Id != user.Id)
-            .Any(anotherUser => anotherUser.Username == credentialsDto.Username);
+            .AnyAsync(anotherUser => anotherUser.Username == credentialsDto.Username);
         if (usernameAlreadyTaken)
         {
             // TODO: Return the 400 Bad Request validation error, not 409 Conflict.
@@ -51,7 +52,7 @@ public class ChangeCredentialsFeature : FeatureBase
         // Revoke refresh tokens.
         user.RefreshTokens.Clear();
         
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         return Ok();
     }
