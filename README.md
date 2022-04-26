@@ -18,16 +18,19 @@ Now You should clone the project:
 git clone https://github.com/satma0745/Meet-e-Kat.git
 ```
 
-Open the project root directory (`Meet-e-Kat` by default) and install all NuGet dependencies:
+Open the project root directory (`Meet-e-Kat` by default) and install all NuGet
+dependencies:
 ```
 dotnet restore
 dotnet tool restore
 ```
 
 Check application configuration in the `Meetekat.WebApi/appsettings.json` file.
-Probably some of the configuration parameters wouldn't satisfy You (i.e. `"Persistence:Password"`).
-You can override them by copying this file, renaming a copy into a `appsettings.Development.json` and changing whichever configuration parameter You want.
-You can also delete all not-overridden parameters (including whole sections like `"Auth"` or `"Swagger"`).
+Probably some of the configuration parameters wouldn't satisfy You
+(i.e. `"Persistence:Password"`). You can override them by copying this file,
+renaming a copy into a `appsettings.Development.json` and changing whichever
+configuration parameter You want. You can also delete all not-overridden
+parameters (including whole sections like `"Auth"` or `"Swagger"`).
 
 Now You can safely migrate database and run the application:
 ```
@@ -35,4 +38,6 @@ dotnet ef database update --project ./Meetekat.WebApi
 dotnet run --project ./Meetekat.WebApi
 ```
 
-Application is up and running. Now You can go to the `"http://localhost:5201/api/swagger"` URL (by default) to explore all endpoints in Swagger Documentation.
+Application is up and running. Now You can go to the
+`"http://localhost:5201/api/swagger"` URL (by default) to explore all endpoints
+in Swagger Documentation.
